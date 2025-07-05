@@ -10,7 +10,7 @@ const app = express();
 // ✅ Allowed Frontend Origins (Local + Deployed)
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://signature-client-lyart.vercel.app',
+  'https://signature-client-five.vercel.app',
 ];
 
 // ✅ CORS Setup

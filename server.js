@@ -7,19 +7,33 @@ const path = require('path');
 dotenv.config();
 const app = express();
 
-// ✅ Middleware
+// ✅ Allowed Frontend Origins (Local + Deployed)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://signature-client-vif5.vercel.app',
+  'https://signature-client-vif5-git-main-krishnas-projects-64464138.vercel.app'
+];
+
+// ✅ CORS Setup
 app.use(cors({
-  origin: 'http://localhost:3000', // adjust for production
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('❌ Not allowed by CORS'));
+    }
+  },
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 app.use(express.json());
 
-// ✅ Audit Logger
+// ✅ Middleware: Audit Logger
 const auditLogger = require('./middleware/auditLogger');
 app.use(auditLogger);
 
-// ✅ Static Files
+// ✅ Static File Serving
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/signed', express.static(path.join(__dirname, 'signed')));
 
@@ -31,19 +45,20 @@ app.use('/api/download', require('./routes/downloadRoutes'));
 app.use('/api/email', require('./routes/emailRoutes'));
 app.use('/api/shared', require('./routes/sharedSignRoutes'));
 
-
-// ✅ Start Server with MongoDB
+// ✅ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => {
   console.log('✅ MongoDB connected');
-  app.listen(process.env.PORT || 5000, () => {
-    console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
   });
 })
 .catch(err => {
   console.error('❌ MongoDB connection failed:', err);
   process.exit(1);
 });
+

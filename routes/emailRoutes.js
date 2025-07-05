@@ -20,7 +20,9 @@ router.post('/share', async (req, res) => {
 
     await ShareToken.create({ documentId, token, used: false, expiresAt });
 
-    const shareLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/shared/${token}`;
+    // ✅ Use deployed frontend link instead of localhost
+    const clientBaseURL = process.env.CLIENT_URL || 'https://signature-client-ashy.vercel.app';
+    const shareLink = `${clientBaseURL}/shared/${token}`;
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -41,7 +43,7 @@ router.post('/share', async (req, res) => {
         <a href="${shareLink}" target="_blank">${shareLink}</a>
         <p>This link is valid for 1 hour and can only be used once.</p>
         <br/>
-        <p>Regards,<br/>DocuSign Clone</p>
+        <p>Regards,<br/>DocuSignPro</p>
       `,
     };
 
@@ -61,3 +63,4 @@ router.post('/share', async (req, res) => {
 });
 
 module.exports = router;
+

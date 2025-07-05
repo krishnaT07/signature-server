@@ -10,8 +10,8 @@ const app = express();
 // ✅ Allowed Frontend Origins (Local + Deployed)
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://signature-client-vif5.vercel.app',
-  'https://signature-client-vif5-git-main-krishnas-projects-64464138.vercel.app'
+  'https://signature-client-lyart.vercel.app/',
+  'https://vercel.com/krishnas-projects-64464138/signature-client/HGWMzqUSukPdFZqqp9rrPUh1yvTZ'
 ];
 
 // ✅ CORS Setup
